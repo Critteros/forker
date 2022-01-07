@@ -1,9 +1,9 @@
+#define GLOBAL_IMPLEMENTATION
+
 #include "pch.h"
 #include "utils.h"
 #include "client.h"
 #include "server.h"
-
-#define GLOBAL_IMPLEMENTATION
 #include "globals.h"
 
 int main(int argc, char *argv[])
@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
 
     //Global initialisation
     numberOfClient = val;
+    lsOutputs = calloc((size_t)numberOfClient, sizeof(char *));
 
     //Checking if dir exists
     if (!utils_dirExists(fifos_DIR))
@@ -39,14 +40,28 @@ int main(int argc, char *argv[])
     }
 
     //Clar any remaining fifo files before proceeding
-    utils_clearFifoFiles(fifos_DIR);
+    chdir(fifos_DIR);
+    utils_clearFifoFiles();
+    chdir("..");
 
     //Create server fifo queque
     mkfifo(serverFifoPath, S_IRUSR | S_IWUSR);
 
+    //First server ls
+    chdir(fifos_DIR);
+    char *lsOutput = utils_execProgram("/bin/ls");
+    utils_replaceChar(lsOutput, '\n', ' ');
+    printf("Server (%d): %s\n", pid, lsOutput);
+    free(lsOutput);
+
     for (int i = 0; i < numberOfClient; i++)
     {
         utils_cloneProcess(childMain);
+        char *ls = utils_execProgram("/bin/ls");
+        utils_replaceChar(ls, '\n', ' ');
+        lsOutputs[i] = calloc(strlen(ls) + 1, sizeof(char));
+        strcpy(lsOutputs[i], ls);
+        free(ls);
     }
 
     serverMain();
@@ -55,6 +70,13 @@ int main(int argc, char *argv[])
     while (wait(NULL) >= 0)
     {
     }
+
+    //Cleanup
+    for (int i = 0; i < numberOfClient; i++)
+    {
+        free(lsOutputs[i]);
+    }
+    free(lsOutputs);
 
     LOG(MAGENTA("\nExitting Main (%d)\n"), pid);
     return EXIT_SUCCESS;

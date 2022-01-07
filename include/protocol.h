@@ -1,9 +1,10 @@
 #pragma once
 
+#include <stdint.h>
+#include <assert.h>
+
 #include "pch.h"
 #include "globals.h"
-#include "stdint.h"
-#include "assert.h"
 
 typedef enum
 {

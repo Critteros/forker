@@ -4,8 +4,9 @@
 
 #define BUFFER_SIZE 65536
 
-void utils_clearFifoFiles(const char *targetDirectory)
+void utils_clearFifoFiles(void)
 {
+    const char *targetDirectory = ".";
     DIR *dp = opendir(targetDirectory);
     if (dp != NULL)
     {
@@ -14,6 +15,7 @@ void utils_clearFifoFiles(const char *targetDirectory)
         {
             if (ep->d_type == DT_FIFO)
             {
+                LOG(YELLOW("Clearing file: %s\n"), ep->d_name);
                 remove(ep->d_name);
             }
         }

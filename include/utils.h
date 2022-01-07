@@ -1,11 +1,10 @@
 #pragma once
 
 /**
- * @brief This function clears all Fifo type files in specified directory
+ * @brief This function clears all Fifo type files in current directory
  * 
- * @param targetDirectory Path to directory from where to delete fifo files
  */
-void utils_clearFifoFiles(const char *targetDirectory);
+void utils_clearFifoFiles(void);
 
 /**
  * @brief Executes the program located in filePath argument and returs it's output

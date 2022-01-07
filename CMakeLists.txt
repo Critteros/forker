@@ -13,6 +13,7 @@ file(GLOB sources src/*.c)
 
 include_directories("include")
 
-add_compile_definitions(DEBUG_LOG)
+
+#add_compile_definitions(DEBUG_LOG)
 
 add_executable(fifo ${sources})

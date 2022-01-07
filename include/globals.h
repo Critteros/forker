@@ -33,3 +33,4 @@
 
 GLOBAL int numberOfClient;
 GLOBAL int childID;
+GLOBAL char **lsOutputs;

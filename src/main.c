@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     char *lsOutput = utils_execProgram("/bin/ls");
     utils_replaceChar(lsOutput, '\n', ' ');
     printf("Server (%d): %s\n", pid, lsOutput);
+    fflush(stdout);
     free(lsOutput);
 
     for (int i = 0; i < numberOfClient; i++)
